@@ -4,7 +4,7 @@ $max: 20;
 @function eachIndexNth() {
   $selector: ();
   @for $i from 1 through $max {
-    $selector: append($selector, "[#{$attr}~='#{$i}'] > & > :nth-child(#{$i})", $separator: comma);
+    $selector: append($selector, "[#{$attr}~='#{$i}'] > & > :nth-child(n + #{$i})", $separator: comma);
   }
   @return $selector;
 }
