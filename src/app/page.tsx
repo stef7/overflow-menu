@@ -23,7 +23,7 @@ export default function HomePage({
         {[10, 20, 21, 32].map((length) => (
           <Link
             key={length}
-            href={{ query: { length } }}
+            href={length === 10 ? "/" : { query: { length } }}
             className={`p-4 -my-4 ${currentLength === length ? "bg-yellow-200" : ""}`}
           >
             {length}
