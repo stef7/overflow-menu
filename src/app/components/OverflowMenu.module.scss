@@ -11,61 +11,55 @@ $max: 20;
 
 .base {
   display: flex;
+  max-width: max-content;
   position: relative;
-
-  &[#{$attr}] {
-    --overflow-item-display: none;
-    --over-max-observed-item-display: none;
-    --observed-item-overflow-visibility: hidden;
-  }
-
-  &[#{$attr}=""] {
-    &:not(:has(> .observedList > :nth-child(#{$max + 1}))) {
-      --overflow-display: none !important;
-    }
-  }
 }
 
 .observedList {
-  flex-grow: 1;
   display: flex;
   overflow: clip;
   white-space: nowrap;
 
-  > * {
-    visibility: var(--overflow-observed-item-visibility);
+  // [#{$attr}] is only set if JS is working.
+  // ensures that isIntersecting is false for all over-max items:
+  [#{$attr}] > & > :nth-child(n + #{$max + 1}) {
+    display: none;
   }
 
-  > :nth-child(n + #{$max + 1}) {
-    display: var(--over-max-observed-item-display);
-  }
   #{eachIndexNth()} {
-    --overflow-observed-item-visibility: var(--observed-item-overflow-visibility);
+    visibility: hidden;
   }
 }
 
+// attribute is only empty string if isIntersecting is true for ALL items.
+// hide overflow control/list if nothing is overflowing:
+[#{$attr}=""] > :is(.overflowControl, .overflowList) {
+  display: none;
+}
+
 .overflowControl {
-  display: var(--overflow-control-display, var(--overflow-display));
   flex-shrink: 0;
 }
 
 .overflowList {
-  display: var(--overflow-list-display, var(--overflow-display, none));
   position: absolute;
   top: 100%;
   right: 0;
+  display: none;
 
-  .base:focus-within &:not(.observedList:focus-within ~ &),
+  .base:focus-within &:not([#{$attr}] > .observedList:focus-within ~ &),
   .overflowControl:is(:hover, :focus-within) ~ &,
   &:is(:hover, :focus-within) {
-    --overflow-display: block;
+    display: block;
   }
 
-  > * {
-    display: var(--overflow-item-display);
+  // [#{$attr}] is only set if JS is working.
+  // if JS works, hide overflow list items by default:
+  [#{$attr}] > & > * {
+    display: var(--overflowMenu-overflowItem-display, none);
   }
   > :nth-child(n + #{$max + 1}),
   #{eachIndexNth()} {
-    --overflow-item-display: ;
+    --overflowMenu-overflowItem-display: ;
   }
 }
