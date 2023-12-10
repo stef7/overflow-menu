@@ -19,12 +19,12 @@ export default function HomePage({
   return (
     <>
       <p className="flex flex-wrap p-4">
-        Length:
+        <span className="p-4">Length:</span>
         {[10, 20, 21, 32].map((length) => (
           <Link
             key={length}
             href={length === 10 ? "/" : { query: { length } }}
-            className={`p-4 -my-4 ${currentLength === length ? "bg-yellow-200" : ""}`}
+            className={`p-4 ${currentLength === length ? "bg-yellow-200" : ""}`}
           >
             {length}
           </Link>
