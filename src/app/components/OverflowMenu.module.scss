@@ -1,0 +1,71 @@
+$attr: data-overflows;
+$max: 20;
+
+@function eachIndexNth() {
+  $selector: ();
+  @for $i from 1 through $max {
+    $selector: append($selector, "[#{$attr}~='#{$i}'] > & > :nth-child(#{$i})", $separator: comma);
+  }
+  @return $selector;
+}
+
+.base {
+  display: flex;
+  position: relative;
+
+  &[#{$attr}] {
+    --overflow-item-display: none;
+    --over-max-observed-item-display: none;
+    --observed-item-overflow-visibility: hidden;
+  }
+
+  &[#{$attr}=""] {
+    &:not(:has(> .observedList > :nth-child(#{$max + 1}))) {
+      --overflow-display: none !important;
+    }
+  }
+}
+
+.observedList {
+  flex-grow: 1;
+  display: flex;
+  overflow: clip;
+  white-space: nowrap;
+
+  > * {
+    visibility: var(--overflow-observed-item-visibility);
+  }
+
+  > :nth-child(n + #{$max + 1}) {
+    display: var(--over-max-observed-item-display);
+  }
+  #{eachIndexNth()} {
+    --overflow-observed-item-visibility: var(--observed-item-overflow-visibility);
+  }
+}
+
+.overflowControl {
+  display: var(--overflow-control-display, var(--overflow-display));
+  flex-shrink: 0;
+}
+
+.overflowList {
+  display: var(--overflow-list-display, var(--overflow-display, none));
+  position: absolute;
+  top: 100%;
+  right: 0;
+
+  .base:focus-within &:not(.observedList:focus-within ~ &),
+  .overflowControl:is(:hover, :focus-within) ~ &,
+  &:is(:hover, :focus-within) {
+    --overflow-display: block;
+  }
+
+  > * {
+    display: var(--overflow-item-display);
+  }
+  > :nth-child(n + #{$max + 1}),
+  #{eachIndexNth()} {
+    --overflow-item-display: ;
+  }
+}
