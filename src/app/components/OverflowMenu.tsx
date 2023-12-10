@@ -44,8 +44,8 @@ export const OverflowMenu = forwardRef<
     Array.from(observedList.children).forEach((kid) => intersectionOb.observe(kid));
     mutationOb.observe(observedList, { childList: true });
     return () => {
-      intersectionOb.disconnect();
       mutationOb.disconnect();
+      intersectionOb.disconnect();
     };
   }, [observedList, intersectionOb, mutationOb]);
 
